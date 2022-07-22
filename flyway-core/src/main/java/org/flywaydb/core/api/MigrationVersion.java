@@ -189,6 +189,16 @@ public final class MigrationVersion implements Comparable<MigrationVersion> {
         return versionParts.get(1).toString();
     }
 
+    /**
+     * a.compareTo(b)
+     *
+     * 结果>0 表示 a>b
+     * 结果=0 表示 a=b
+     * 结果<0 表示 a<b
+     *
+     * @param o MigrationVersion
+     * @return int
+     */
     @Override
     public int compareTo(MigrationVersion o) {
         if (o == null) {

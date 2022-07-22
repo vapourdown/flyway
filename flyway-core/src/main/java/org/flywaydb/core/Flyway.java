@@ -124,6 +124,7 @@ public class Flyway {
         return flywayExecutor.execute(new FlywayExecutor.Command<MigrateResult>() {
             public MigrateResult execute(MigrationResolver migrationResolver, SchemaHistory schemaHistory, Database database,
                                          Schema defaultSchema, Schema[] schemas, CallbackExecutor callbackExecutor, StatementInterceptor statementInterceptor) {
+                //是否验证迁移
                 if (configuration.isValidateOnMigrate()) {
                     ValidateResult validateResult = doValidate(database, migrationResolver, schemaHistory, defaultSchema, schemas, callbackExecutor, true);
                     if (!validateResult.validationSuccessful && !configuration.isCleanOnValidationError()) {

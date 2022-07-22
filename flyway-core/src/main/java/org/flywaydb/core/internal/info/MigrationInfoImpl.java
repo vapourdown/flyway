@@ -128,42 +128,22 @@ public class MigrationInfoImpl implements MigrationInfo {
 
     @Override
     public MigrationState getState() {
-
-
-
-
-
-
         if (deleted) {
             return MigrationState.DELETED;
         }
-
         if (appliedMigration == null) {
-
-
-
-
-
-
-
-
             if (shouldNotExecuteMigration) {
                 return MigrationState.IGNORED;
             }
-
             if (resolvedMigration.getVersion() != null) {
 
                 if (resolvedMigration.getVersion().compareTo(context.baseline) < 0) {
                     return MigrationState.BELOW_BASELINE;
                 }
-
-
-
-
-
                 if (context.target != null && context.target != MigrationVersion.NEXT && resolvedMigration.getVersion().compareTo(context.target) > 0) {
                     return MigrationState.ABOVE_TARGET;
                 }
+                //如果迁移版本小于上次的版本并且不允许乱序
                 if ((resolvedMigration.getVersion().compareTo(context.lastApplied) < 0) && !context.outOfOrder) {
                     return MigrationState.IGNORED;
                 }
@@ -182,28 +162,7 @@ public class MigrationInfoImpl implements MigrationInfo {
         if (MigrationType.BASELINE == appliedMigration.getType()) {
             return MigrationState.BASELINE;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
         if (resolvedMigration == null && isRepeatableLatest()) {
-
-
-
-
-
-
-
-
             if (MigrationType.SCHEMA == appliedMigration.getType()) {
                 return MigrationState.SUCCESS;
             }
@@ -220,15 +179,6 @@ public class MigrationInfoImpl implements MigrationInfo {
                 return MigrationState.FUTURE_FAILED;
             }
         }
-
-
-
-
-
-
-
-
-
         if (!appliedMigration.isSuccess()) {
             return MigrationState.FAILED;
         }

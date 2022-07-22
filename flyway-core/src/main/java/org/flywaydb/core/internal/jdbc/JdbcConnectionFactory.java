@@ -71,7 +71,7 @@ public class JdbcConnectionFactory implements Closeable {
         this.connectRetries = configuration.getConnectRetries();
         this.connectRetriesInterval = configuration.getConnectRetriesInterval();
         this.configuration = configuration;
-
+        //打开连接
         firstConnection = JdbcUtils.openConnection(dataSource, connectRetries, connectRetriesInterval);
         this.databaseType = DatabaseTypeRegister.getDatabaseTypeForConnection(firstConnection);
 

@@ -111,25 +111,9 @@ public class FlywayExecutor {
 
         configurationValidator.validate(configuration);
 
-
-
-
-
-
-
-
-
         VersionPrinter.printVersion();
         
         StatementInterceptor statementInterceptor = null;
-
-
-
-
-
-
-
-
 
 
         final Pair<ResourceProvider, ClassProvider<JavaMigration>> resourceProviderClassProviderPair = createResourceAndClassProviders(scannerRequired);
@@ -138,12 +122,8 @@ public class FlywayExecutor {
         final ParsingContext parsingContext = new ParsingContext();
 
 
-
-
-
-
         resourceNameValidator.validateSQLMigrationNaming(resourceProvider, configuration);
-
+        //连接工厂
         JdbcConnectionFactory jdbcConnectionFactory = new JdbcConnectionFactory(configuration.getDataSource(), configuration, statementInterceptor);
 
         final DatabaseType databaseType = jdbcConnectionFactory.getDatabaseType();
@@ -158,14 +138,8 @@ public class FlywayExecutor {
                 return;
             }
             StringResource resource = new StringResource(configuration.getInitSql());
-
             SqlScript sqlScript = sqlScriptFactory.createSqlScript(resource, true, resourceProvider);
-
             boolean outputQueryResults = false;
-
-
-
-
             noCallbackSqlScriptExecutorFactory.createSqlScriptExecutor(connection, false, false, outputQueryResults).execute(sqlScript);
         });
 
@@ -180,13 +154,8 @@ public class FlywayExecutor {
             Schema defaultSchema = schemas.getLeft();
 
 
-
-
-
-
-
             parsingContext.populate(database, configuration);
-
+            //保证支持的数据库
             database.ensureSupported();
 
             DefaultCallbackExecutor callbackExecutor = new DefaultCallbackExecutor(configuration, database, defaultSchema, prepareCallbacks(
@@ -212,11 +181,6 @@ public class FlywayExecutor {
                     statementInterceptor);
         } finally {
             IOUtils.close(database);
-
-
-
-
-
             showMemoryUsage();
         }
         return result;
@@ -236,10 +200,6 @@ public class FlywayExecutor {
                 classProvider = configuration.getJavaMigrationClassProvider();
             } else {
                 boolean stream = false;
-
-
-
-
                 Scanner<JavaMigration> scanner = new Scanner<>(
                         JavaMigration.class,
                         Arrays.asList(configuration.getLocations()),
@@ -271,41 +231,13 @@ public class FlywayExecutor {
                                             Schema schema, ParsingContext parsingContext) {
         List<Callback> effectiveCallbacks = new ArrayList<>();
         CallbackExecutor callbackExecutor = NoopCallbackExecutor.INSTANCE;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         effectiveCallbacks.addAll(Arrays.asList(configuration.getCallbacks()));
-
-
-
-
-
-
-
-
         if (!configuration.isSkipDefaultCallbacks()) {
             SqlScriptExecutorFactory sqlScriptExecutorFactory = jdbcConnectionFactory.getDatabaseType().createSqlScriptExecutorFactory(
                     jdbcConnectionFactory, callbackExecutor, statementInterceptor);
 
             effectiveCallbacks.addAll(new SqlScriptCallbackFactory(resourceProvider, sqlScriptExecutorFactory, sqlScriptFactory, configuration).getCallbacks());
         }
-
-
-
-
-
         return effectiveCallbacks;
     }
 
